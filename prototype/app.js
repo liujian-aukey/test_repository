@@ -371,11 +371,16 @@ function renderActiveView() {
 
 function renderProjectOverviewView() {
   const rows = getFilteredProjects();
+  const totalProjects = state.projects.length;
+  const totalDocs = state.documents.length;
+  const projectsWithoutDocs = state.projects.filter((project) => !getDocsForProject(project).length).length;
+  const managerCount = new Set(state.projects.map((project) => project.manager)).size;
 
   return `
     <div class="view-page">
       <div class="page-header">
         <div>
+          <div class="page-overline">项目管理 / 项目概况</div>
           <div class="page-title">项目概况</div>
           <div class="page-subtitle">以分页列表形式管理项目主数据，并提供文档跳转入口</div>
         </div>
@@ -384,7 +389,37 @@ function renderProjectOverviewView() {
         </div>
       </div>
 
+      <div class="page-kpis">
+        <div class="kpi-card">
+          <span>项目总数</span>
+          <strong>${totalProjects}</strong>
+          <p>统一纳管的项目主数据条目</p>
+        </div>
+        <div class="kpi-card">
+          <span>当前结果</span>
+          <strong>${rows.length}</strong>
+          <p>${state.filtersApplied ? "按当前筛选条件返回结果" : "当前为全量项目列表"}</p>
+        </div>
+        <div class="kpi-card">
+          <span>关联文档数</span>
+          <strong>${totalDocs}</strong>
+          <p>已归档的需求文档与资料文件</p>
+        </div>
+        <div class="kpi-card">
+          <span>项目经理数</span>
+          <strong>${managerCount}</strong>
+          <p>当前负责项目的经理人数</p>
+        </div>
+      </div>
+
       <div class="card search-card">
+        <div class="section-head">
+          <div>
+            <h3>筛选条件</h3>
+            <p>支持按项目名称、版本号、项目经理和需求部门进行模糊检索</p>
+          </div>
+          <div class="section-badge">未挂文档项目 ${projectsWithoutDocs}</div>
+        </div>
         <div class="search-grid">
           <label>
             <span>项目名称</span>
@@ -411,7 +446,10 @@ function renderProjectOverviewView() {
 
       <div class="card">
         <div class="card-title-row">
-          <h3>项目列表</h3>
+          <div>
+            <h3>项目列表</h3>
+            <p class="section-caption">展示项目主数据、需求文档入口及行内维护操作</p>
+          </div>
           <span class="table-meta">共 ${rows.length} 条结果 · 演示分页 1 / 1</span>
         </div>
         <div class="table-wrap">
@@ -477,11 +515,15 @@ function renderDocumentManagementView() {
   const selectedNode = getTreeNode(state.selectedTreeNodeId);
   const docs = getDocsForNodeScope(state.selectedTreeNodeId);
   const nodePath = buildNodePath(state.selectedTreeNodeId).join(" / ");
+  const versionCount = state.tree.filter((node) => node.type === "version").length;
+  const folderCount = state.tree.filter((node) => node.type === "folder").length;
+  const selectedLabel = selectedNode ? selectedNode.label : "未选择";
 
   return `
     <div class="view-page">
       <div class="page-header">
         <div>
+          <div class="page-overline">项目管理 / 需求文档管理</div>
           <div class="page-title">需求文档管理</div>
           <div class="page-subtitle">左侧目录树导航，右侧展示当前选中目录及其子目录下的文件</div>
         </div>
@@ -491,11 +533,37 @@ function renderDocumentManagementView() {
         </div>
       </div>
 
+      <div class="page-kpis">
+        <div class="kpi-card">
+          <span>纳管项目</span>
+          <strong>${state.projects.length}</strong>
+          <p>目录树第一层项目节点数量</p>
+        </div>
+        <div class="kpi-card">
+          <span>版本节点</span>
+          <strong>${versionCount}</strong>
+          <p>项目版本根目录节点数</p>
+        </div>
+        <div class="kpi-card">
+          <span>子目录数</span>
+          <strong>${folderCount}</strong>
+          <p>版本下扩展的文件夹节点数量</p>
+        </div>
+        <div class="kpi-card">
+          <span>当前范围文件</span>
+          <strong>${docs.length}</strong>
+          <p>当前选中目录及子目录下的文件数</p>
+        </div>
+      </div>
+
       <div class="doc-layout">
         <section class="card tree-panel">
           <div class="card-title-row">
-            <h3>需求文档目录</h3>
-            <span class="table-meta">树结构：项目名称 → 版本号 → 子目录/文件</span>
+            <div>
+              <h3>需求文档目录</h3>
+              <p class="section-caption">树结构：项目名称 → 版本号 → 子目录 / 文件</p>
+            </div>
+            <span class="table-meta">当前选中：${escapeHtml(selectedLabel)}</span>
           </div>
           <div class="tree-container">${treeHtml}</div>
         </section>
