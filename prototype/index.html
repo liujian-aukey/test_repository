@@ -20,19 +20,19 @@
             <p>统一管理项目主数据、需求文档目录与文件资产</p>
           </div>
           <div class="login-demo-card">
-            <h2>演示账号</h2>
-            <p>账号：admin</p>
-            <p>密码：12345</p>
-            <p>登录后有效期：5 小时</p>
+            <h2>登录说明</h2>
+            <p>请输入账号和密码后登录系统。</p>
+            <p>登录成功后，系统登录态默认维持 5 小时。</p>
+            <p>原型聚焦页面结构与交互流程展示。</p>
           </div>
           <form id="login-form" class="login-form">
             <label>
               <span>账号</span>
-              <input name="username" type="text" placeholder="请输入账号" value="admin" autocomplete="username" />
+              <input name="username" type="text" placeholder="请输入账号" autocomplete="username" />
             </label>
             <label>
               <span>密码</span>
-              <input name="password" type="password" placeholder="请输入密码" value="12345" autocomplete="current-password" />
+              <input name="password" type="password" placeholder="请输入密码" autocomplete="current-password" />
             </label>
             <button type="submit" class="primary-btn block-btn">登录系统</button>
             <p id="login-error" class="form-error hidden"></p>
@@ -44,6 +44,7 @@
     <template id="app-template">
       <div class="shell">
         <aside id="sidebar" class="sidebar">
+          <button id="sidebar-rail-toggle" class="sidebar-rail-toggle" type="button" aria-label="切换侧边栏">◀</button>
           <div class="sidebar-header">
             <div class="logo-mark">PM</div>
             <div class="sidebar-header-copy">
@@ -51,11 +52,14 @@
               <span>Prototype Studio</span>
             </div>
           </div>
-          <button id="toggle-sidebar" class="sidebar-toggle" type="button">折叠侧栏</button>
+          <button id="toggle-sidebar" class="sidebar-toggle" type="button">收起侧栏</button>
           <nav class="menu-tree">
             <div class="menu-group">
-              <button class="menu-level-1 active" type="button">项目管理</button>
-              <div class="menu-children">
+              <div class="menu-group-header">
+                <button id="menu-root-btn" class="menu-level-1 active" type="button">项目管理</button>
+                <button id="toggle-menu-group" class="menu-toggle-btn" type="button" aria-label="切换一级菜单展开状态">▾</button>
+              </div>
+              <div id="project-menu-children" class="menu-children">
                 <button data-menu="项目概况" class="menu-level-2 active" type="button">项目概况</button>
                 <button data-menu="需求文档管理" class="menu-level-2" type="button">需求文档管理</button>
               </div>

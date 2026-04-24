@@ -3,6 +3,7 @@ const storageKey = "pm-prototype-state";
 const initialState = {
   user: null,
   isSidebarCollapsed: false,
+  isProjectMenuExpanded: true,
   openTabs: ["项目概况"],
   activeTab: "项目概况",
   selectedTreeNodeId: "node-project-oa-v23",
@@ -318,6 +319,18 @@ function renderShell(app) {
   if (state.isSidebarCollapsed) {
     sidebar.classList.add("collapsed");
   }
+  const menuChildren = document.getElementById("menu-children");
+  const menuToggleBtn = document.getElementById("menu-group-toggle");
+  const sidebarRailToggle = document.getElementById("sidebar-rail-toggle");
+  if (!state.isProjectMenuExpanded) {
+    menuChildren.classList.add("collapsed");
+    menuToggleBtn.textContent = "▸";
+  } else {
+    menuToggleBtn.textContent = "▾";
+  }
+
+  document.getElementById("toggle-sidebar").textContent = state.isSidebarCollapsed ? "展开侧栏" : "折叠侧栏";
+  sidebarRailToggle.textContent = state.isSidebarCollapsed ? "▶" : "◀";
 
   document.getElementById("session-remaining").textContent = getSessionRemaining();
   document.getElementById("nickname-display").textContent = state.user.nickname;
@@ -367,8 +380,6 @@ function renderProjectOverviewView() {
           <div class="page-subtitle">以分页列表形式管理项目主数据，并提供文档跳转入口</div>
         </div>
         <div class="header-actions">
-          <button id="query-btn" class="secondary-btn" type="button">查询</button>
-          <button id="reset-query-btn" class="ghost-btn" type="button">重置</button>
           <button id="add-project-btn" class="primary-btn" type="button">新增项目</button>
         </div>
       </div>
@@ -391,6 +402,10 @@ function renderProjectOverviewView() {
             <span>需求部门</span>
             <input id="search-department" value="${escapeHtml(state.search.department)}" placeholder="模糊搜索需求部门" />
           </label>
+        </div>
+        <div class="search-actions">
+          <button id="search-submit-btn" class="primary-btn" type="button">搜索</button>
+          <button id="search-reset-btn" class="ghost-btn" type="button">重置</button>
         </div>
       </div>
 
@@ -804,6 +819,21 @@ function bindGlobalEvents() {
     render();
   });
 
+  document.getElementById("sidebar-rail-toggle").addEventListener("click", () => {
+    state.isSidebarCollapsed = !state.isSidebarCollapsed;
+    render();
+  });
+
+  document.getElementById("sidebar-expand-handle")?.addEventListener("click", () => {
+    state.isSidebarCollapsed = false;
+    render();
+  });
+
+  document.getElementById("menu-group-toggle").addEventListener("click", () => {
+    state.isProjectMenuExpanded = !state.isProjectMenuExpanded;
+    render();
+  });
+
   document.querySelectorAll("[data-menu]").forEach((button) => {
     button.addEventListener("click", () => {
       openTab(button.dataset.menu);
@@ -852,12 +882,12 @@ function bindProjectOverviewEvents() {
     });
   });
 
-  document.getElementById("query-btn").addEventListener("click", () => {
+  document.getElementById("search-submit-btn").addEventListener("click", () => {
     state.filtersApplied = true;
     render();
   });
 
-  document.getElementById("reset-query-btn").addEventListener("click", () => {
+  document.getElementById("search-reset-btn").addEventListener("click", () => {
     state.search = { name: "", version: "", manager: "", department: "" };
     state.filtersApplied = false;
     render();
