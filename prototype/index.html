@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>项目管理系统原型</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div id="app"></div>
+
+    <div id="toast-root" class="toast-root" aria-live="polite" aria-atomic="true"></div>
+
+    <template id="login-template">
+      <div class="login-shell">
+        <div class="login-panel">
+          <div class="login-brand">
+            <span class="login-badge">交互原型</span>
+            <h1>项目管理系统</h1>
+            <p>统一管理项目主数据、需求文档目录与文件资产</p>
+          </div>
+          <div class="login-demo-card">
+            <h2>演示账号</h2>
+            <p>账号：admin</p>
+            <p>密码：12345</p>
+            <p>登录后有效期：5 小时</p>
+          </div>
+          <form id="login-form" class="login-form">
+            <label>
+              <span>账号</span>
+              <input name="username" type="text" placeholder="请输入账号" value="admin" autocomplete="username" />
+            </label>
+            <label>
+              <span>密码</span>
+              <input name="password" type="password" placeholder="请输入密码" value="12345" autocomplete="current-password" />
+            </label>
+            <button type="submit" class="primary-btn block-btn">登录系统</button>
+            <p id="login-error" class="form-error hidden"></p>
+          </form>
+        </div>
+      </div>
+    </template>
+
+    <template id="app-template">
+      <div class="shell">
+        <aside id="sidebar" class="sidebar">
+          <div class="sidebar-header">
+            <div class="logo-mark">PM</div>
+            <div class="sidebar-header-copy">
+              <strong>项目管理系统</strong>
+              <span>Prototype Studio</span>
+            </div>
+          </div>
+          <button id="toggle-sidebar" class="sidebar-toggle" type="button">折叠侧栏</button>
+          <nav class="menu-tree">
+            <div class="menu-group">
+              <button class="menu-level-1 active" type="button">项目管理</button>
+              <div class="menu-children">
+                <button data-menu="项目概况" class="menu-level-2 active" type="button">项目概况</button>
+                <button data-menu="需求文档管理" class="menu-level-2" type="button">需求文档管理</button>
+              </div>
+            </div>
+          </nav>
+        </aside>
+
+        <div class="workspace">
+          <header class="topbar">
+            <div class="topbar-title">
+              <h1>项目管理系统原型</h1>
+              <p>覆盖登录、项目概况、需求文档管理及核心交互流程</p>
+            </div>
+            <div class="topbar-actions">
+              <div class="status-pill">登录态剩余 <span id="session-remaining">5h</span></div>
+              <div class="avatar-wrap">
+                <button id="avatar-trigger" class="avatar-trigger" type="button">
+                  <span id="avatar-letter" class="avatar-letter">系</span>
+                  <span id="nickname-display">系统管理员</span>
+                </button>
+                <div id="avatar-dropdown" class="avatar-dropdown hidden">
+                  <button id="logout-btn" type="button">退出登录</button>
+                </div>
+              </div>
+            </div>
+          </header>
+
+          <main class="main-content">
+            <div class="tabs-bar">
+              <div id="tabs"></div>
+            </div>
+            <section id="view-container" class="view-container"></section>
+          </main>
+        </div>
+      </div>
+
+      <input id="project-upload-files" class="hidden-file-input" type="file" multiple />
+      <input id="project-upload-folder" class="hidden-file-input" type="file" multiple webkitdirectory directory />
+      <input id="doc-upload-files" class="hidden-file-input" type="file" multiple />
+      <input id="doc-upload-folder" class="hidden-file-input" type="file" multiple webkitdirectory directory />
+      <input id="doc-update-file" class="hidden-file-input" type="file" />
+    </template>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
